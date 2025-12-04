@@ -55,3 +55,29 @@ gopkg.in/yaml.v3 v3.0.1
 9) now tidy it all up and compile your contract with these 2 commands
 go mod tidy
 go build -o simple-contract
+10) this part sucks, because their tutorial has not been updated. There is no chaincode-docker-devmode folder. WTH?!
+
+this is what they really mean for 2.0 since the above directory NO LONGER EXISTS and is from 1.4.
+
+cd to your /path/to/your/fabric/scripts/fabric-samples/test-network
+Run these commands instead
+./network.sh down
+./network.sh up createChannel -ca
+
+Now when you run docker ps -a, you will see 6 containers, like below. This IS the test network, because you need those new newer containers for MSP identities, TLS certs and Enrollment certs. You cannot deploy chaincode or run transactions without them. As usual, take note of your container IDs and their names.
+
+$ docker ps -a
+CONTAINER ID   IMAGE                               COMMAND                  CREATED          STATUS          PORTS                                                                                                                                   NAMES
+5fd73bb9b36a   hyperledger/fabric-peer:latest      "peer node start"        23 seconds ago   Up 23 seconds   0.0.0.0:9051->9051/tcp, [::]:9051->9051/tcp, 7051/tcp, 0.0.0.0:9445->9445/tcp, [::]:9445->9445/tcp                                      peer0.org2.example.com
+36922e2759f4   hyperledger/fabric-peer:latest      "peer node start"        23 seconds ago   Up 23 seconds   0.0.0.0:7051->7051/tcp, [::]:7051->7051/tcp, 0.0.0.0:9444->9444/tcp, [::]:9444->9444/tcp                                                peer0.org1.example.com
+1da55ece6608   hyperledger/fabric-orderer:latest   "orderer"                23 seconds ago   Up 23 seconds   0.0.0.0:7050->7050/tcp, [::]:7050->7050/tcp, 0.0.0.0:7053->7053/tcp, [::]:7053->7053/tcp, 0.0.0.0:9443->9443/tcp, [::]:9443->9443/tcp   orderer.example.com
+0a755e2f7fc5   hyperledger/fabric-ca:latest        "sh -c 'fabric-ca-se…"   29 seconds ago   Up 29 seconds   0.0.0.0:7054->7054/tcp, [::]:7054->7054/tcp, 0.0.0.0:17054->17054/tcp, [::]:17054->17054/tcp                                            ca_org1
+a233fb8d2254   hyperledger/fabric-ca:latest        "sh -c 'fabric-ca-se…"   29 seconds ago   Up 29 seconds   0.0.0.0:8054->8054/tcp, [::]:8054->8054/tcp, 7054/tcp, 0.0.0.0:18054->18054/tcp, [::]:18054->18054/tcp                                  ca_org2
+843d12c2ac63   hyperledger/fabric-ca:latest        "sh -c 'fabric-ca-se…"   29 seconds ago   Up 29 seconds   0.0.0.0:9054->9054/tcp, [::]:9054->9054/tcp, 7054/tcp, 0.0.0.0:19054->19054/tcp, [::]:19054->19054/tcp                                  ca_orderer
+
+And again, this message is just noise:  Error: proposal failed (err: bad proposal response 500: cannot create ledger from genesis block: ledger [mychannel] already exists with state [ACTIVE])
+After 5 attempts, peer0.org1 has failed to join channel 'mychannel'
+
+and what this means is:  “This peer already has this channel, stop trying to add it again.”
+
+

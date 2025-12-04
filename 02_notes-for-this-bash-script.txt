@@ -1,0 +1,14 @@
+02_setup-chaincode-directory-and-pull-go-contract-github.sh broken down for everyone
+
+Source URLs
+https://github.com/hyperledger/fabric-contract-api-go/blob/v1.2.2/tutorials/getting-started.md
+https://pkg.go.dev/github.com/hyperledger/fabric-contract-api-go#section-readme
+
+Assumptions and Notes
+1) this script is pretty straightforward and simple
+2) be SURE you put this script in the correct directory:  /path/to/your/fabric/scripts/fabric-samples
+3) after you run the script, move it (or delete it) out of the /path/to/your/fabric/scripts/fabric-samples directory so it doesn't cause problems with future git requests to the hyperledger and go contract tutorial gits.
+4) What this does is create the needed directories based on the tutorial instructions and creates the basic tutorial contract from it for you
+5) why do I do this? so I (or you) don't have to worry about trying to build it out and can focus on the jargon in the tutorial from the source URLs.
+6) putting EOF in single quotes (cat <<'EOF' > simple-contract.go) preserves all the double quotes from the code example in the tutorial
+7) assuming you know how to use linux CLI, chmod and chown as you need for your environment

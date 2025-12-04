@@ -17,5 +17,3 @@ cd fabric-samples/test-network || exit 1
 ./network.sh down
 ./network.sh up
 ./network.sh createChannel
-
-echo "changing directories to ~/fabric/chaincode"

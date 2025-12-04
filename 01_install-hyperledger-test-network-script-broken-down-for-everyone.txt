@@ -1,0 +1,274 @@
+hyperledger-fabric test network install tut simplified.
+
+Source github URLs:
+https://hyperledger-fabric.readthedocs.io/en/release-2.5/install.html
+https://github.com/hyperledger/fabric
+
+Assumptions and Notes:
+a) you know how to use linux CLI
+b) you can see my ~/ base folder is /mnt/data/project where /mnt/data/project/fabric gets cloned into
+c) you have already configured and installed docker from the official docker repo
+d) I was using ubuntu 24.04 LTS server for this, but it should work on any modern linux distro, script is bash, installs are git and executables
+e) assumes you understand any chowns or chmods you need to do
+f) put the script in the place you want the fabric folder to get cloned into
+g) why I built this? because I didn't want to have to remember how to do this all over again if I wanted to wipe it out and build up to any future point of development
+
+
+Script broken down in step by step instructions
+1) Clone this into your desired folder
+
+git clone https://github.com/hyperledger/fabric.git
+
+2) Output for my example on an externally mounted nvme drive
+computer@computer-dev:/mnt/data/project$ ls -lash
+total 24K
+4.0K drwxr-xr-x  6 computer computer 4.0K Dec  4 12:03 .
+4.0K drwxr-xr-x  4 root   root   4.0K Nov 29 13:50 ..
+4.0K drwxrwxr-x 26 computer computer 4.0K Dec  4 12:04 fabric
+
+3) change directory to /mnt/data/project/fabric/scripts
+
+run this command:  ./install-fabric.sh d s b
+
+what this command does is clones this github:  git clone https://github.com/hyperledger/fabric-samples.git and setups the docker instance so its running, so don't clone it manually, yes I know it makes a bloody mess out of the folder organizational structure for sanity purposes, but their developers obviously didn't think thru this tutorial from any rational organizational logic and just threw shit wherever)
+
+----
+Output should look like this
+-----------------------------
+computer@computer-dev:/mnt/data/project/fabric/scripts$ ./install-fabric.sh d s b
+
+Clone hyperledger/fabric-samples repo
+
+===> Changing directory to fabric-samples
+fabric-samples v2.5.14 does not exist, defaulting to main. fabric-samples main branch is intended to work with recent versions of fabric.
+
+Pull Hyperledger Fabric binaries
+
+===> Downloading version 2.5.14 platform specific fabric binaries
+===> Downloading:  https://github.com/hyperledger/fabric/releases/download/v2.5.14/hyperledger-fabric-linux-amd64-2.5.14.tar.gz
+===> Will unpack to: /mnt/data/project/fabric/scripts/fabric-samples
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+100  119M  100  119M    0     0  44.3M      0  0:00:02  0:00:02 --:--:-- 51.6M
+==> Done.
+===> Downloading version 1.5.15 platform specific fabric-ca-client binary
+===> Downloading:  https://github.com/hyperledger/fabric-ca/releases/download/v1.5.15/hyperledger-fabric-ca-linux-amd64-1.5.15.tar.gz
+===> Will unpack to: /mnt/data/project/fabric/scripts/fabric-samples
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+100 30.0M  100 30.0M    0     0  32.8M      0 --:--:-- --:--:-- --:--:-- 46.5M
+==> Done.
+
+Pull Hyperledger Fabric docker images
+
+FABRIC_IMAGES: peer orderer ccenv baseos
+===> Pulling fabric Images
+====>  ghcr.io/hyperledger/fabric-peer:2.5.14
+2.5.14: Pulling from hyperledger/fabric-peer
+Digest: sha256:f3deef3d9e7969663ed4aab51ef311ea49d53953f57b2fefda7b2a4a927ed3ec
+Status: Image is up to date for ghcr.io/hyperledger/fabric-peer:2.5.14
+ghcr.io/hyperledger/fabric-peer:2.5.14
+====>  ghcr.io/hyperledger/fabric-orderer:2.5.14
+2.5.14: Pulling from hyperledger/fabric-orderer
+Digest: sha256:9eb88fc642335a1dd4c5bfc6429380703d112eeb4dee2e2e548bc6644ae8ef31
+Status: Image is up to date for ghcr.io/hyperledger/fabric-orderer:2.5.14
+ghcr.io/hyperledger/fabric-orderer:2.5.14
+====>  ghcr.io/hyperledger/fabric-ccenv:2.5.14
+2.5.14: Pulling from hyperledger/fabric-ccenv
+Digest: sha256:6505edc2d67c398bafadac0059c96a8300d891be377e097111aca1870cc1eec0
+Status: Image is up to date for ghcr.io/hyperledger/fabric-ccenv:2.5.14
+ghcr.io/hyperledger/fabric-ccenv:2.5.14
+====>  ghcr.io/hyperledger/fabric-baseos:2.5.14
+2.5.14: Pulling from hyperledger/fabric-baseos
+Digest: sha256:cf2992573c7fa6b342cd994f3d5e1104c438fe630d6a3a09f2f8ecaf673a96c3
+Status: Image is up to date for ghcr.io/hyperledger/fabric-baseos:2.5.14
+ghcr.io/hyperledger/fabric-baseos:2.5.14
+===> Pulling fabric ca Image
+====>  ghcr.io/hyperledger/fabric-ca:1.5.15
+1.5.15: Pulling from hyperledger/fabric-ca
+Digest: sha256:4704861f82be659372510b72c1e8b141563743e1f5840d8c094ded1df9253c68
+Status: Image is up to date for ghcr.io/hyperledger/fabric-ca:1.5.15
+ghcr.io/hyperledger/fabric-ca:1.5.15
+===> List out hyperledger images
+WARNING: This output is designed for human readability. For machine-readable output, please use --format.
+ghcr.io/hyperledger/fabric-baseos:2.5.14    950d39690236        152MB             0B
+ghcr.io/hyperledger/fabric-ca:1.5.15        03492c5437b1        225MB             0B
+ghcr.io/hyperledger/fabric-ccenv:2.5.14     c85456fc3e00        641MB             0B
+ghcr.io/hyperledger/fabric-orderer:2.5.14   7e333420b191        119MB             0B
+ghcr.io/hyperledger/fabric-peer:2.5.14      86565c641d12        153MB             0B
+hyperledger/fabric-baseos:2.5               950d39690236        152MB             0B
+hyperledger/fabric-baseos:2.5.14            950d39690236        152MB             0B
+hyperledger/fabric-baseos:latest            950d39690236        152MB             0B
+hyperledger/fabric-ca:1.5                   03492c5437b1        225MB             0B
+hyperledger/fabric-ca:1.5.15                03492c5437b1        225MB             0B
+hyperledger/fabric-ca:latest                03492c5437b1        225MB             0B
+hyperledger/fabric-ccenv:2.5                c85456fc3e00        641MB             0B
+hyperledger/fabric-ccenv:2.5.14             c85456fc3e00        641MB             0B
+hyperledger/fabric-ccenv:latest             c85456fc3e00        641MB             0B
+hyperledger/fabric-orderer:2.5              7e333420b191        119MB             0B
+hyperledger/fabric-orderer:2.5.14           7e333420b191        119MB             0B
+hyperledger/fabric-orderer:latest           7e333420b191        119MB             0B
+hyperledger/fabric-peer:2.5                 86565c641d12        153MB             0B
+hyperledger/fabric-peer:2.5.14              86565c641d12        153MB             0B
+hyperledger/fabric-peer:latest              86565c641d12        153MB             0B
+
+4) then change directory to:  computer@computer-dev:/mnt/data/project/fabric/scripts/fabric-samples/test-network$
+
+and run these commands
+
+./network.sh down
+./network.sh up
+
+output should be something like this
+-------------------------------------
+computer@computer-dev:/mnt/data/project/fabric/scripts/fabric-samples/test-network$ ./network.sh down
+Using docker and docker-compose
+Stopping network
+ERROR: Top level object in './addOrg3/compose/docker/docker-compose-couch-org3.yaml' needs to be an object not '<class 'NoneType'>'.
+Error response from daemon: get docker_orderer.example.com: no such volume
+Error response from daemon: get docker_peer0.org1.example.com: no such volume
+Error response from daemon: get docker_peer0.org2.example.com: no such volume
+Removing remaining containers
+Removing generated chaincode docker images
+computer@computer-dev:/mnt/data/project/fabric/scripts/fabric-samples/test-network$ ./network.sh up
+Using docker and docker-compose
+Starting nodes with CLI timeout of '5' tries and CLI delay of '3' seconds and using database 'leveldb' with crypto from 'cryptogen'
+LOCAL_VERSION=v2.5.14
+DOCKER_IMAGE_VERSION=v2.5.14
+/mnt/data/project/fabric/scripts/fabric-samples/test-network/../bin/cryptogen
+Generating certificates using cryptogen tool
+Creating Org1 Identities
++ cryptogen generate --config=./organizations/cryptogen/crypto-config-org1.yaml --output=organizations
+org1.example.com
++ res=0
+Creating Org2 Identities
++ cryptogen generate --config=./organizations/cryptogen/crypto-config-org2.yaml --output=organizations
+org2.example.com
++ res=0
+Creating Orderer Org Identities
++ cryptogen generate --config=./organizations/cryptogen/crypto-config-orderer.yaml --output=organizations
++ res=0
+Generating CCP files for Org1 and Org2
+Creating peer0.org1.example.com ... done
+Creating peer0.org2.example.com ... done
+Creating orderer.example.com    ... done
+CONTAINER ID   IMAGE                               COMMAND             CREATED                  STATUS                  PORTS                                                                                                                                   NAMES
+f16e7b49b814   hyperledger/fabric-orderer:latest   "orderer"           Less than a second ago   Up Less than a second   0.0.0.0:7050->7050/tcp, [::]:7050->7050/tcp, 0.0.0.0:7053->7053/tcp, [::]:7053->7053/tcp, 0.0.0.0:9443->9443/tcp, [::]:9443->9443/tcp   orderer.example.com
+d22f360a05b5   hyperledger/fabric-peer:latest      "peer node start"   Less than a second ago   Up Less than a second   0.0.0.0:9051->9051/tcp, [::]:9051->9051/tcp, 7051/tcp, 0.0.0.0:9445->9445/tcp, [::]:9445->9445/tcp                                      peer0.org2.example.com
+e35859063738   hyperledger/fabric-peer:latest      "peer node start"   Less than a second ago   Up Less than a second   0.0.0.0:7051->7051/tcp, [::]:7051->7051/tcp, 0.0.0.0:9444->9444/tcp, [::]:9444->9444/tcp                                                peer0.org1.example.com
+
+5) now you can verify it with this:  docker ps -a
+
+output should look something like this:
+--------------------------------------
+computer@computer-dev:/mnt/data/project/fabric/scripts/fabric-samples/test-network$ docker ps -a
+CONTAINER ID   IMAGE                               COMMAND             CREATED          STATUS          PORTS                                                                                                                                   NAMES
+f16e7b49b814   hyperledger/fabric-orderer:latest   "orderer"           10 seconds ago   Up 10 seconds   0.0.0.0:7050->7050/tcp, [::]:7050->7050/tcp, 0.0.0.0:7053->7053/tcp, [::]:7053->7053/tcp, 0.0.0.0:9443->9443/tcp, [::]:9443->9443/tcp   orderer.example.com
+d22f360a05b5   hyperledger/fabric-peer:latest      "peer node start"   10 seconds ago   Up 10 seconds   0.0.0.0:9051->9051/tcp, [::]:9051->9051/tcp, 7051/tcp, 0.0.0.0:9445->9445/tcp, [::]:9445->9445/tcp                                      peer0.org2.example.com
+e35859063738   hyperledger/fabric-peer:latest      "peer node start"   10 seconds ago   Up 10 seconds   0.0.0.0:7051->7051/tcp, [::]:7051->7051/tcp, 0.0.0.0:9444->9444/tcp, [::]:9444->9444/tcp                                                peer0.org1.example.com
+
+6) now run this command (from the same directory):  ./network.sh createChannel
+
+its too much output to paste into this tutorial, but as long as nothing fails and you where a bunch of stuff is "joined", you should be fine.
+with any luck you should see this in the output:  2025-12-04 12:52:24.825 CST 0007 INFO [common.tools.configtxgen] doOutputBlock -> Writing genesis block
+
+keep in mind you will also see this stupid shit
+2025-12-04 12:52:40.009 CST 0001 INFO [channelCmd] InitCmdFactory -> Endorser and orderer connections initialized
+Error: proposal failed (err: bad proposal response 500: cannot create ledger from genesis block: ledger [mychannel] already exists with state [ACTIVE])
+After 5 attempts, peer0.org1 has failed to join channel 'mychannel'
+
+even though it "failed" dont' worry about it, your are creating from scratch, so there are no other peers, but now lets do a sanity check to keep you from going into triage mode
+
+computer@computer-dev:/mnt/data/project/fabric/scripts/fabric-samples/test-network$ docker ps
+CONTAINER ID   IMAGE                               COMMAND             CREATED          STATUS          PORTS                                                                                                                                   NAMES
+87b06e63e235   hyperledger/fabric-orderer:latest   "orderer"           13 minutes ago   Up 13 minutes   0.0.0.0:7050->7050/tcp, [::]:7050->7050/tcp, 0.0.0.0:7053->7053/tcp, [::]:7053->7053/tcp, 0.0.0.0:9443->9443/tcp, [::]:9443->9443/tcp   orderer.example.com
+1a6b92313723   hyperledger/fabric-peer:latest      "peer node start"   13 minutes ago   Up 13 minutes   0.0.0.0:7051->7051/tcp, [::]:7051->7051/tcp, 0.0.0.0:9444->9444/tcp, [::]:9444->9444/tcp                                                peer0.org1.example.com
+9e3dbb3e52c2   hyperledger/fabric-peer:latest      "peer node start"   13 minutes ago   Up 13 minutes   0.0.0.0:9051->9051/tcp, [::]:9051->9051/tcp, 7051/tcp, 0.0.0.0:9445->9445/tcp, [::]:9445->9445/tcp                                      peer0.org2.example.com
+computer@computer-dev:/mnt/data/project/fabric/scripts/fabric-samples/test-network$ docker exec -it peer0.org1.example.com bash
+root@1a6b92313723:~# peer channel list
+2025-12-04 19:08:50.358 UTC 0001 INFO [channelCmd] InitCmdFactory -> Endorser and orderer connections initialized
+Channels peers has joined:
+mychannel
+root@1a6b92313723:~# exit
+exit
+computer@computer-dev:/mnt/data/project/fabric/scripts/fabric-samples/test-network$
+
+--you can do the same for the second container labeled peer0.org2.example.com
+
+7) now regress a couple directories
+computer@computer-dev:/mnt/data/project/fabric/scripts/fabric-samples/test-network$ cd ..
+computer@computer-dev:/mnt/data/project/fabric/scripts/fabric-samples$
+
+8) create the following directory: chaincode, change directory to it and run this command:  go mod init github.com/hyperledger/fabric-samples/chaincode/contract-tutorial
+
+computer@computer-dev:/mnt/data/project/fabric/scripts/fabric-samples$ mkdir chaincode
+computer@computer-dev:/mnt/data/project/fabric/scripts/fabric-samples$ cd chaincode/
+computer@computer-dev:/mnt/data/project/fabric/scripts/fabric-samples/chaincode$ go mod init github.com/hyperledger/fabric-samples/chaincode/contract-tutorial
+go: creating new go.mod: module github.com/hyperledger/fabric-samples/chaincode/contract-tutorial
+computer@computer-dev:/mnt/data/project/fabric/scripts/fabric-samples/chaincode$ ls -lash
+total 12K
+4.0K drwxrwxr-x  2 computer computer 4.0K Dec  4 12:36 .
+4.0K drwxrwxr-x 31 computer computer 4.0K Dec  4 12:35 ..
+4.0K -rw-rw-r--  1 computer computer   84 Dec  4 12:36 go.mod
+
+9) SUMMARY TIME == Now you have an orderer base for the hyperledger AND 2 peers, each in their own containers
+If you need to verify and validate your hyperledger test network runs, run these comands:
+
+a) docker ps -a
+Look at your output from this, you should see 2 peers with domains such as peer0.org1.example.com and peer0.org2.example.com. If its a little different just use what you got instead of what I have
+b) now check your peers with these commands, exit, and then check the other docker test peer instance instance
+docker exec -it peer0.org1.example.com bash
+peer channel list
+exit
+
+here is an example below where I check the first peer based on the output of docker ps -a.
+
+computer@computer-dev:/mnt/data/project/fabric/scripts/fabric-samples/test-network$ docker ps -a
+CONTAINER ID   IMAGE                               COMMAND             CREATED          STATUS          PORTS                                                                                                                                   NAMES
+87b06e63e235   hyperledger/fabric-orderer:latest   "orderer"           13 minutes ago   Up 13 minutes   0.0.0.0:7050->7050/tcp, [::]:7050->7050/tcp, 0.0.0.0:7053->7053/tcp, [::]:7053->7053/tcp, 0.0.0.0:9443->9443/tcp, [::]:9443->9443/tcp   orderer.example.com
+1a6b92313723   hyperledger/fabric-peer:latest      "peer node start"   13 minutes ago   Up 13 minutes   0.0.0.0:7051->7051/tcp, [::]:7051->7051/tcp, 0.0.0.0:9444->9444/tcp, [::]:9444->9444/tcp                                                peer0.org1.example.com
+9e3dbb3e52c2   hyperledger/fabric-peer:latest      "peer node start"   13 minutes ago   Up 13 minutes   0.0.0.0:9051->9051/tcp, [::]:9051->9051/tcp, 7051/tcp, 0.0.0.0:9445->9445/tcp, [::]:9445->9445/tcp                                      peer0.org2.example.com
+computer@computer-dev:/mnt/data/project/fabric/scripts/fabric-samples/test-network$ docker exec -it peer0.org1.example.com bash
+root@1a6b92313723:~# peer channel list
+2025-12-04 19:08:50.358 UTC 0001 INFO [channelCmd] InitCmdFactory -> Endorser and orderer connections initialized
+Channels peers has joined:
+mychannel
+root@1a6b92313723:~# exit
+exit
+computer@computer-dev:/mnt/data/project/fabric/scripts/fabric-samples/test-network$
+
+10) Moving forward
+Now you can move on to creating applications/contracts with GO so each of the peers can "do something" to add more blocks beyond the genesis block with this git:
+git clone https://github.com/hyperledger/fabric-contract-api-go.git
+
+Be sure you change directory back out to the parent of your fabric directory for sake of your own sanity in your folder/file organization.
+Here are the source URLs for the go contract stuff
+https://github.com/hyperledger/fabric-contract-api-go
+https://github.com/hyperledger/fabric-contract-api-go/blob/v1.2.2/tutorials/getting-started.md
+https://pkg.go.dev/github.com/hyperledger/fabric-contract-api-go#section-readme
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -249,6 +249,16 @@ https://github.com/hyperledger/fabric-contract-api-go
 https://github.com/hyperledger/fabric-contract-api-go/blob/v1.2.2/tutorials/getting-started.md
 https://pkg.go.dev/github.com/hyperledger/fabric-contract-api-go#section-readme
 
+11) stopping and starting docker containers (DON'T FORGET TO DOCUMENT THE NAMES BEFORE YOU STOP THE CONTAINERS, you can see my example below from above installation)
+docker stop orderer.example.com
+docker stop peer0.org1.example.com
+docker stop peer0.org2.example.com
+
+docker start orderer.example.com
+docker start peer0.org1.example.com
+docker start peer0.org2.example.com
+
+
 
 
 

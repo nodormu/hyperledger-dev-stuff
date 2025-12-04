@@ -111,3 +111,10 @@ func main() {
     }
 }
 EOF
+go mod tidy
+go build -o simple-contract
+cd ..
+cd ..
+cd test-network
+./network.sh down
+./network.sh up createChannel -ca

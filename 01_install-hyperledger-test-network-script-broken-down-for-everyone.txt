@@ -12,6 +12,9 @@ d) I was using ubuntu 24.04 LTS server for this, but it should work on any moder
 e) assumes you understand any chowns or chmods you need to do
 f) put the script in the place you want the fabric folder to get cloned into
 g) why I built this? because I didn't want to have to remember how to do this all over again if I wanted to wipe it out and build up to any future point of development
+h) what you want to see in the output: 2025-12-04 15:02:57.362 CST 0007 INFO [common.tools.configtxgen] doOutputBlock -> Writing genesis block
+i) what you don't need to worry about since you just created it:  Error: proposal failed (err: bad proposal response 500: cannot create ledger from genesis block: ledger [mychannel] already exists with state [ACTIVE])
+After 5 attempts, peer0.org1 has failed to join channel 'mychannel'
 
 
 Script broken down in step by step instructions

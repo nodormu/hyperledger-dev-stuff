@@ -15,5 +15,5 @@ echo "Changing directories to ~/fabric/scripts/fabric-samples/test-network"
 cd fabric-samples/test-network || exit 1
 
 ./network.sh down
-./network.sh up
+./network.sh up -ca
 ./network.sh createChannel
